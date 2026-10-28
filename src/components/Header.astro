@@ -21,25 +21,16 @@
   const sync = () => btn.setAttribute("aria-label", root.dataset.theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
   sync();
 
+  // Swap instantly with element transitions paused, so every color changes in
+  // the same frame instead of each link and border easing at its own speed.
+  // Only the button icon animates, and the button is never locked.
   btn.addEventListener("click", () => {
     const next = root.dataset.theme === "dark" ? "light" : "dark";
-    const apply = () => {
-      root.dataset.theme = next;
-      try { localStorage.setItem("theme", next); } catch {}
-      sync();
-    };
-    const r = btn.getBoundingClientRect();
-    root.style.setProperty("--x", `${r.left + r.width / 2}px`);
-    root.style.setProperty("--y", `${r.top + r.height / 2}px`);
-
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if ("startViewTransition" in document && !reduce) {
-      (document as any).startViewTransition(apply);
-    } else {
-      root.classList.add("theme-fade");
-      apply();
-      setTimeout(() => root.classList.remove("theme-fade"), 450);
-    }
+    root.classList.add("theme-switching");
+    root.dataset.theme = next;
+    try { localStorage.setItem("theme", next); } catch {}
+    sync();
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("theme-switching")));
   });
 
   const onScroll = () => header.classList.toggle("scrolled", scrollY > 8);

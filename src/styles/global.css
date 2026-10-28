@@ -177,10 +177,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
 .icon-btn:active { transform: scale(0.92); }
 .icon-btn svg { width: 18px; height: 18px; }
-#theme-toggle { margin-left: 4px; }
-#theme-toggle .sun { display: none; }
-:root[data-theme="dark"] #theme-toggle .sun { display: block; }
-:root[data-theme="dark"] #theme-toggle .moon { display: none; }
+
+/* Theme toggle: sun and moon stacked, morphing with transform + opacity only */
+#theme-toggle { margin-left: 4px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+#theme-toggle svg {
+  grid-area: 1 / 1;
+  transition: transform 0.5s var(--ease), opacity 0.3s var(--ease);
+}
+#theme-toggle .sun { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+:root[data-theme="dark"] #theme-toggle .sun { opacity: 1; transform: none; }
+:root[data-theme="dark"] #theme-toggle .moon { opacity: 0; transform: rotate(90deg) scale(0.4); }
 
 /* Sections */
 main section { padding-block: clamp(40px, 7vw, 64px); }
@@ -376,24 +382,15 @@ footer {
 .js .reveal {
   opacity: 0;
   transform: translateY(16px);
-  filter: blur(4px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
   transition-delay: calc(var(--i, 0) * 70ms);
 }
-.js .reveal.in { opacity: 1; transform: none; filter: none; }
+.js .reveal.in { opacity: 1; transform: none; }
 
-/* Theme switch: circular reveal via View Transitions */
-::view-transition-old(root),
-::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
-::view-transition-new(root) { animation: reveal 0.7s var(--ease); }
-@keyframes reveal {
-  from { clip-path: circle(0 at var(--x, 50%) var(--y, 0)); }
-  to { clip-path: circle(150vmax at var(--x, 50%) var(--y, 0)); }
-}
-/* Fallback when View Transitions are unavailable */
-.theme-fade, .theme-fade *, .theme-fade *::before, .theme-fade *::after {
-  transition: background-color 0.4s var(--ease), color 0.4s var(--ease), border-color 0.4s var(--ease) !important;
-}
+/* Pause transitions for the frame the theme changes (toggle icon excepted) */
+.theme-switching *:not(#theme-toggle svg),
+.theme-switching *::before,
+.theme-switching *::after { transition: none !important; }
 
 @media (max-width: 420px) {
   .nav-skills { display: none; }
@@ -408,6 +405,5 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .js .reveal { opacity: 1; transform: none; filter: none; }
-  ::view-transition-new(root) { animation: none; }
+  .js .reveal { opacity: 1; transform: none; }
 }
