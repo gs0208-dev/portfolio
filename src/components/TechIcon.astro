@@ -1,0 +1,28 @@
+---
+import { icons, iconLabel, type IconName } from "../data/icons";
+
+interface Props {
+  name: string;
+  size?: number;
+  decorative?: boolean;
+}
+
+const { name, size = 18, decorative = false } = Astro.props;
+const icon = icons[name as IconName];
+const label = iconLabel(name);
+---
+
+{icon && (
+  <svg
+    class="tech-icon"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    role={decorative ? undefined : "img"}
+    aria-hidden={decorative ? "true" : undefined}
+    aria-label={decorative ? undefined : label}
+  >
+    {!decorative && <title>{label}</title>}
+    <path d={icon.path} fill="currentColor" />
+  </svg>
+)}

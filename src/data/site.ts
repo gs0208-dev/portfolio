@@ -1,51 +1,66 @@
 // Placeholder content: replace every TODO with your real details.
+// `stack` / `skills` entries are keys of the icon map in components/TechIcon.astro.
 export const site = {
   name: "Giridhar S",
-  role: "Software developer",
-  location: "India", // TODO
+  role: "Software developer", // TODO
+  location: "India", // TODO: city, country
   email: "giridhar200402@gmail.com",
+  // Words wrapped in [brackets] are highlighted.
   intro:
-    "I build web software that is fast, accessible and easy to maintain.", // TODO: one-line pitch
-  status: "Open to opportunities", // TODO or remove
-  socials: [
-    { label: "GitHub", href: "#" }, // TODO
-    { label: "LinkedIn", href: "#" }, // TODO
-    { label: "Resume", href: "#" }, // TODO
-  ],
-  about: [
-    "Replace this with two or three honest sentences about what you do, what you're studying or have shipped, and what you're looking for next.", // TODO
-    "A second short paragraph about how you work or what you care about.", // TODO
-  ],
-  projects: [
+    "I build web applications end to end, from database to interface, and care about the small details that make software feel right. Currently working with [TypeScript], [React] and [Node.js].", // TODO
+  status: "Open to opportunities", // TODO or set to ""
+  socials: {
+    github: "#", // TODO
+    linkedin: "#", // TODO
+    x: "", // optional
+  },
+  experience: [
     {
-      year: "2026",
-      title: "Project title",
-      summary: "One sentence on the problem it solves and the result.",
-      role: "Design and development",
-      stack: ["TypeScript", "React", "Postgres"],
-      href: "#",
+      role: "Software Developer", // TODO
+      company: "Company name",
+      period: "2025 — Present",
+      meta: "Remote, Full-time",
+      current: true,
+      summary: "One sentence on what the team does and what you own.",
+      points: [
+        "A concrete result, ideally with a number.",
+        "Something you designed or shipped.",
+      ],
+      stack: ["typescript", "react", "nodejs"],
     },
     {
-      year: "2025",
-      title: "Project title",
-      summary: "One sentence on the problem it solves and the result.",
-      role: "Full-stack",
-      stack: ["Python", "FastAPI"],
-      href: "#",
-    },
-    {
-      year: "2025",
-      title: "Project title",
-      summary: "One sentence on the problem it solves and the result.",
-      role: "Front-end",
-      stack: ["Astro", "CSS"],
-      href: "#",
+      role: "Software Developer Intern", // TODO
+      company: "Company name",
+      period: "2024 — 2025",
+      meta: "On-site, Internship",
+      current: false,
+      summary: "One sentence on what you worked on.",
+      points: ["A concrete result or responsibility."],
+      stack: ["python", "postgresql"],
     },
   ],
   skills: [
-    { group: "Languages", items: ["TypeScript", "JavaScript", "Python", "SQL"] },
-    { group: "Front-end", items: ["React", "Astro", "HTML", "CSS"] },
-    { group: "Back-end", items: ["Node.js", "FastAPI", "PostgreSQL"] },
-    { group: "Tools", items: ["Git", "Linux", "Figma"] },
+    "typescript", "javascript", "python", "java",
+    "react", "nextjs", "astro", "tailwind", "html", "css",
+    "nodejs", "fastapi", "postgresql", "mongodb", "mysql",
+    "docker", "git", "github", "linux", "figma",
+  ], // TODO
+  projects: [
+    {
+      title: "Project one", // TODO
+      summary: "One or two sentences on the problem it solves and the result.",
+      href: "#",
+      repo: "#",
+      image: "", // e.g. "/projects/one.png" in public/
+      stack: ["nextjs", "react", "tailwind"],
+    },
+    {
+      title: "Project two", // TODO
+      summary: "One or two sentences on the problem it solves and the result.",
+      href: "#",
+      repo: "#",
+      image: "",
+      stack: ["python", "fastapi", "postgresql"],
+    },
   ],
 };

@@ -1,93 +1,154 @@
 ---
 import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
+import TechIcon from "../components/TechIcon.astro";
+import { iconLabel } from "../data/icons";
 import { site } from "../data/site";
 
 const year = new Date().getFullYear();
+const initials = site.name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2);
+// "[TypeScript]" in the intro becomes a highlighted term.
+const introParts = site.intro.split(/(\[[^\]]+\])/).filter(Boolean);
 ---
 
 <Base>
   <Header />
 
-  <main>
-    <section class="hero">
-      <div class="wrap">
-        <h1 class="reveal" style="--i:0">{site.name}<span class="dot">.</span></h1>
-        <p class="role reveal" style="--i:1"><strong>{site.role}.</strong> {site.intro}</p>
-        <div class="hero-meta reveal" style="--i:2">
-          <span class="mono status">{site.status}</span>
-          <a class="link" href="#work">Selected work <span class="arrow" aria-hidden="true">↓</span></a>
+  <main class="wrap">
+    <!-- Intro -->
+    <section class="intro" aria-label="Introduction">
+      <div class="profile reveal">
+        <div class="avatar" aria-hidden="true">{initials}</div>
+        <div>
+          <h1>{site.name}</h1>
+          <p class="subtitle">{site.role}</p>
         </div>
       </div>
-    </section>
 
-    <section id="work" aria-labelledby="work-title">
-      <div class="wrap">
-        <span class="mono eyebrow reveal">01 / Work</span>
-        <h2 id="work-title" class="reveal" style="margin-bottom: clamp(32px, 5vw, 64px)">Selected projects</h2>
-        <ul class="projects">
-          {site.projects.map((p, i) => (
-            <li class="reveal" style={`--i:${i}`}>
-              <a class="project" href={p.href}>
-                <span class="mono year">{p.year}</span>
-                <div>
-                  <h3>{p.title}</h3>
-                  <p>{p.summary}</p>
-                  <ul class="stack mono">
-                    {p.stack.map((s) => <li>{s}</li>)}
-                  </ul>
-                </div>
-                <span class="go" aria-hidden="true">↗</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <section id="about" aria-labelledby="about-title">
-      <div class="wrap">
-        <span class="mono eyebrow reveal">02 / About</span>
-        <div class="about-grid">
-          <h2 id="about-title" class="reveal">A bit about me</h2>
-          <div class="about-copy reveal" style="--i:1">
-            {site.about.map((t) => <p>{t}</p>)}
+      <dl class="meta reveal" style="--i:1">
+        <div>
+          <dt class="label">Location</dt>
+          <dd>{site.location}</dd>
+        </div>
+        <div>
+          <dt class="label">Email</dt>
+          <dd><a class="u" href={`mailto:${site.email}`}>{site.email}</a></dd>
+        </div>
+        {site.status && (
+          <div>
+            <dt class="label">Status</dt>
+            <dd class="status">{site.status}</dd>
           </div>
-        </div>
-        <div class="skills">
-          {site.skills.map((g, i) => (
-            <div class="reveal" style={`--i:${i}`}>
-              <h3 class="mono">{g.group}</h3>
-              <ul>{g.items.map((s) => <li>{s}</li>)}</ul>
+        )}
+      </dl>
+
+      <p class="bio reveal" style="--i:2">
+        {introParts.map((part) =>
+          part.startsWith("[") ? <strong>{part.slice(1, -1)}</strong> : part
+        )}
+      </p>
+
+      <ul class="socials reveal" style="--i:3" aria-label="Links">
+        {site.socials.github && (
+          <li><a class="icon-btn" href={site.socials.github} aria-label="GitHub"><TechIcon name="github" decorative /></a></li>
+        )}
+        {site.socials.linkedin && (
+          <li><a class="icon-btn" href={site.socials.linkedin} aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3zM9.5 9.75h3.8v1.5h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1v5.45h-4v-4.83c0-1.15-.02-2.63-1.6-2.63-1.6 0-1.85 1.25-1.85 2.55v4.91h-4z"/></svg>
+          </a></li>
+        )}
+        {site.socials.x && (
+          <li><a class="icon-btn" href={site.socials.x} aria-label="X">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.8-6.3L6.4 22H3.3l7.3-8.3L1 2h6.3l4.4 5.8zm-1.1 18h1.7L6.3 3.9H4.5z"/></svg>
+          </a></li>
+        )}
+        <li><a class="icon-btn" href={`mailto:${site.email}`} aria-label="Email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        </a></li>
+      </ul>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" aria-labelledby="experience-title">
+      <h2 id="experience-title" class="label reveal">Experience</h2>
+      <ol class="timeline">
+        {site.experience.map((job, i) => (
+          <li class:list={["job reveal", { current: job.current }]} style={`--i:${i}`}>
+            <div class="job-head">
+              <h3>{job.role} <span class="at">· {job.company}</span></h3>
+              <span class="period">{job.period}</span>
             </div>
-          ))}
-        </div>
+            <p class="job-meta">{job.meta}</p>
+            <p class="job-summary">{job.summary}</p>
+            {job.points.length > 0 && (
+              <ul class="points">{job.points.map((pt) => <li>{pt}</li>)}</ul>
+            )}
+            <ul class="icons" aria-label="Technologies">
+              {job.stack.map((s) => <li><TechIcon name={s} /></li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" aria-labelledby="skills-title">
+      <h2 id="skills-title" class="label reveal">Skills</h2>
+      <ul class="skills">
+        {site.skills.map((s, i) => (
+          <li class="skill reveal" style={`--i:${i % 6}`}>
+            <TechIcon name={s} decorative />
+            <span>{iconLabel(s)}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="label reveal">Projects</h2>
+      <div class="projects">
+        {site.projects.map((p, i) => (
+          <article class="project reveal" style={`--i:${i}`}>
+            <a class="shot" href={p.href} tabindex="-1" aria-hidden="true">
+              {p.image
+                ? <img src={p.image} alt="" loading="lazy" decoding="async" />
+                : <span class="shot-empty">{p.title}</span>}
+            </a>
+            <div class="project-body">
+              <div class="project-head">
+                <h3><a href={p.href}>{p.title}</a></h3>
+                <div class="project-links">
+                  {p.repo && <a href={p.repo} aria-label={`${p.title} source code`}><TechIcon name="github" size={16} decorative /></a>}
+                  {p.href && <a href={p.href} aria-label={`Visit ${p.title}`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+                  </a>}
+                </div>
+              </div>
+              <p>{p.summary}</p>
+              <ul class="icons" aria-label="Technologies">
+                {p.stack.map((s) => <li><TechIcon name={s} /></li>)}
+              </ul>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
 
+    <!-- Contact -->
     <section id="contact" class="contact" aria-labelledby="contact-title">
-      <div class="wrap">
-        <span class="mono eyebrow reveal">03 / Contact</span>
-        <h2 id="contact-title" class="reveal">Let's build something.</h2>
-        <a class="mail reveal" style="--i:1" href={`mailto:${site.email}`}>{site.email}</a>
-        <div class="socials reveal" style="--i:2">
-          {site.socials.map((s) => (
-            <a class="link" href={s.href}>{s.label} <span class="arrow" aria-hidden="true">↗</span></a>
-          ))}
-        </div>
-      </div>
+      <h2 id="contact-title" class="label reveal">Contact</h2>
+      <p class="contact-line reveal">Have a role or a project in mind? I reply within a day.</p>
+      <a class="mail reveal" style="--i:1" href={`mailto:${site.email}`}>{site.email}<span aria-hidden="true">↗</span></a>
     </section>
   </main>
 
-  <footer>
-    <div class="wrap">
-      <span class="mono">© {year} {site.name}</span>
-      <span class="mono">{site.location}</span>
-    </div>
+  <footer class="wrap">
+    <span>© {year} {site.name}</span>
+    <a class="u" href="#top">Back to top</a>
   </footer>
 
   <script>
-    const items = document.querySelectorAll<HTMLElement>(".reveal");
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -97,8 +158,8 @@ const year = new Date().getFullYear();
           }
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
+      { threshold: 0.1, rootMargin: "0px 0px -5% 0px" }
     );
-    items.forEach((el) => io.observe(el));
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
   </script>
 </Base>
