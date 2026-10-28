@@ -1,0 +1,104 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import { site } from "../data/site";
+
+const year = new Date().getFullYear();
+---
+
+<Base>
+  <Header />
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1 class="reveal" style="--i:0">{site.name}<span class="dot">.</span></h1>
+        <p class="role reveal" style="--i:1"><strong>{site.role}.</strong> {site.intro}</p>
+        <div class="hero-meta reveal" style="--i:2">
+          <span class="mono status">{site.status}</span>
+          <a class="link" href="#work">Selected work <span class="arrow" aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="work" aria-labelledby="work-title">
+      <div class="wrap">
+        <span class="mono eyebrow reveal">01 / Work</span>
+        <h2 id="work-title" class="reveal" style="margin-bottom: clamp(32px, 5vw, 64px)">Selected projects</h2>
+        <ul class="projects">
+          {site.projects.map((p, i) => (
+            <li class="reveal" style={`--i:${i}`}>
+              <a class="project" href={p.href}>
+                <span class="mono year">{p.year}</span>
+                <div>
+                  <h3>{p.title}</h3>
+                  <p>{p.summary}</p>
+                  <ul class="stack mono">
+                    {p.stack.map((s) => <li>{s}</li>)}
+                  </ul>
+                </div>
+                <span class="go" aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="about-title">
+      <div class="wrap">
+        <span class="mono eyebrow reveal">02 / About</span>
+        <div class="about-grid">
+          <h2 id="about-title" class="reveal">A bit about me</h2>
+          <div class="about-copy reveal" style="--i:1">
+            {site.about.map((t) => <p>{t}</p>)}
+          </div>
+        </div>
+        <div class="skills">
+          {site.skills.map((g, i) => (
+            <div class="reveal" style={`--i:${i}`}>
+              <h3 class="mono">{g.group}</h3>
+              <ul>{g.items.map((s) => <li>{s}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <span class="mono eyebrow reveal">03 / Contact</span>
+        <h2 id="contact-title" class="reveal">Let's build something.</h2>
+        <a class="mail reveal" style="--i:1" href={`mailto:${site.email}`}>{site.email}</a>
+        <div class="socials reveal" style="--i:2">
+          {site.socials.map((s) => (
+            <a class="link" href={s.href}>{s.label} <span class="arrow" aria-hidden="true">↗</span></a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span class="mono">© {year} {site.name}</span>
+      <span class="mono">{site.location}</span>
+    </div>
+  </footer>
+
+  <script>
+    const items = document.querySelectorAll<HTMLElement>(".reveal");
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
+    );
+    items.forEach((el) => io.observe(el));
+  </script>
+</Base>
